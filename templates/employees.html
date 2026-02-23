@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Ажилтнууд</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Нэр</th>
+            <th>Албан тушаал</th>
+            <th>Хэлтэс</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for emp in employees %}
+        <tr>
+            <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+            <td>{{ emp.position }}</td>
+            <td>{{ emp.department }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Ажилтан бүртгэгдээгүй байна.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

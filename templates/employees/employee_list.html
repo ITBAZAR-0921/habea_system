@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Ажилчдын жагсаалт</h2>
+<a href="/employees/add/" class="btn btn-success mb-3">
+    ➕ Ажилтан нэмэх
+</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Нэр</th>
+            <th>Албан тушаал</th>
+            <th>Хэлтэс</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if employees %}
+            {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+                    <td>{{ emp.position }}</td>
+                    <td>{{ emp.department }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="3">Ажилтан бүртгэгдээгүй байна.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% endblock %}

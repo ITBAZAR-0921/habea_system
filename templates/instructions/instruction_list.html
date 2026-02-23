@@ -1,0 +1,25 @@
+<h2>Зааврын жагсаалт</h2>
+
+<a href="{% url 'instruction_add' %}" class="btn btn-success mb-3">
+    ➕ Заавар нэмэх
+</a>
+
+<table class="table">
+    <tr>
+        <th>Гарчиг</th>
+        <th>Тайлбар</th>
+        <th>Файл</th>
+    </tr>
+
+    {% for ins in instructions %}
+    <tr>
+        <td>{{ ins.title }}</td>
+        <td>{{ ins.description }}</td>
+        <td>
+            {% if ins.file %}
+                <a href="{{ ins.file.url }}">Татах</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
