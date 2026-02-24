@@ -1,6 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Нүүр хуудас</h2>
-<p>Систем амжилттай ажиллаж байна.</p>
+<h2 class="mb-4">ХАБЭА Хяналтын самбар</h2>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Нийт ажилтан</h6>
+                <h3>{{ employee_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Нийт заавар</h6>
+                <h3>{{ instruction_count }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Нийт зааварчилгаа бүртгэл</h6>
+                <h3>{{ record_count }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-md-6">
+        <div class="alert alert-danger mb-0">Хугацаа дууссан: <strong>{{ overdue_count }}</strong></div>
+    </div>
+    <div class="col-md-6">
+        <div class="alert alert-warning mb-0">30 хоногт дуусах: <strong>{{ due_soon_count }}</strong></div>
+    </div>
+</div>
 {% endblock %}

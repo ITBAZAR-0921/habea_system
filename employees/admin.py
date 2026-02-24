@@ -16,6 +16,7 @@ class EmployeeAdmin(admin.ModelAdmin):
         "first_name",
         "department",
         "position",
+        "is_head",
     )
-    list_filter = ("department",)
+    list_filter = ("department", "is_head")
     search_fields = ("last_name", "first_name", "register")

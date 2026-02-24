@@ -1,6 +1,50 @@
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Эрхийн түвшиний тохиргоо</h2>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Эрх оноох</h5>
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Хадгалах</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Одоогийн хэрэглэгчийн эрхүүд</h5>
+                <div class="table-responsive mt-3">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Нэр</th>
+                                <th>Эрхийн түвшин</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user, role_name in user_roles %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                <td>{{ role_name }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="3">Хэрэглэгч алга.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

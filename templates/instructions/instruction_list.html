@@ -1,25 +1,44 @@
-<h2>Зааврын жагсаалт</h2>
+{% extends "base.html" %}
 
-<a href="{% url 'instruction_add' %}" class="btn btn-success mb-3">
-    ➕ Заавар нэмэх
-</a>
+{% block content %}
+<h2 class="mb-3">Зааврын жагсаалт</h2>
 
-<table class="table">
-    <tr>
-        <th>Гарчиг</th>
-        <th>Тайлбар</th>
-        <th>Файл</th>
-    </tr>
+<div class="mb-3 d-flex gap-2">
+    <a href="{% url 'instruction_add' %}" class="btn btn-success">Заавар нэмэх</a>
+    <a href="{% url 'instruction_record_add' %}" class="btn btn-primary">Зааварчилгаа бүртгэл нэмэх</a>
+</div>
 
+<div class="row mb-3">
+    <div class="col-md-6"><div class="alert alert-warning mb-0">30 хоногт дуусах: <strong>{{ due_soon_count }}</strong></div></div>
+    <div class="col-md-6"><div class="alert alert-danger mb-0">Хугацаа дууссан: <strong>{{ overdue_count }}</strong></div></div>
+</div>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Гарчиг</th>
+            <th>Тайлбар</th>
+            <th>Хүчинтэй хоног</th>
+            <th>Файл</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for ins in instructions %}
-    <tr>
-        <td>{{ ins.title }}</td>
-        <td>{{ ins.description }}</td>
-        <td>
-            {% if ins.file %}
-                <a href="{{ ins.file.url }}">Татах</a>
-            {% endif %}
-        </td>
-    </tr>
+        <tr>
+            <td>{{ ins.title }}</td>
+            <td>{{ ins.description|truncatechars:120 }}</td>
+            <td>{{ ins.validity_days }}</td>
+            <td>
+                {% if ins.file %}
+                    <a href="{{ ins.file.url }}">Татах</a>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="4">Заавар бүртгэгдээгүй байна.</td></tr>
     {% endfor %}
+    </tbody>
 </table>
+{% endblock %}

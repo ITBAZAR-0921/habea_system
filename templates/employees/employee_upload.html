@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Excel файлаар ажилтан импортлох</h2>
+
+<p class="text-muted">Файлын эхний мөр нь баганын нэртэй байна. `xlsx` форматыг дэмжинэ.</p>
+
+<div class="table-responsive mb-3">
+    <table class="table table-sm table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>№</th>
+                <th>last_name</th>
+                <th>first_name</th>
+                <th>register_number</th>
+                <th>phone</th>
+                <th>department</th>
+                <th>is_head</th>
+                <th>username</th>
+                <th>password</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Бат</td>
+                <td>Төмөр</td>
+                <td>УК00112233</td>
+                <td>99112233</td>
+                <td>Үйлдвэрлэл</td>
+                <td>TRUE</td>
+                <td>t.bat</td>
+                <td>Temp@123</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="d-flex gap-2 align-items-end">
+    {% csrf_token %}
+    <div>
+        {{ form.file.label_tag }}
+        {{ form.file }}
+    </div>
+    <button type="submit" class="btn btn-primary">Импорт хийх</button>
+    <a href="{% url 'employee_list' %}" class="btn btn-secondary">Буцах</a>
+</form>
+{% endblock %}

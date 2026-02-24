@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Заавар нэмэх</h2>
+<h2>Зааварчилгаа бүртгэл нэмэх</h2>
 
-<form method="post" enctype="multipart/form-data" class="mt-3">
+<form method="post" class="mt-3">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Хадгалах</button>
-    <a href="{% url 'instruction_list' %}" class="btn btn-secondary">Буцах</a>
+    <a href="{% url 'instruction_record_list' %}" class="btn btn-secondary">Буцах</a>
 </form>
 {% endblock %}

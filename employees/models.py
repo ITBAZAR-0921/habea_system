@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Department(models.Model):
@@ -16,7 +17,7 @@ class Employee(models.Model):
     last_name = models.CharField(max_length=100)
     register = models.CharField(max_length=20, unique=True, blank=True, null=True)
 
-    position = models.CharField(max_length=150)
+    position = models.CharField(max_length=150, default="Ажилтан")
 
     department = models.ForeignKey(
         Department,
@@ -28,10 +29,11 @@ class Employee(models.Model):
 
     phone = models.CharField(max_length=20, blank=True)
     email = models.EmailField(blank=True)
+    is_head = models.BooleanField(default=False)
 
-    photo = models.ImageField(upload_to="employees/", blank=True)
+    photo = models.FileField(upload_to="employees/", blank=True)
 
-    hired_date = models.DateField()
+    hired_date = models.DateField(default=timezone.localdate)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
