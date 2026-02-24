@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Шалгалтын дүн</h2>
+
+<div class="card">
+    <div class="card-body">
+        {% if practice_result %}
+            <p><strong>Шалгалт:</strong> {{ practice_result.exam_title }}</p>
+            <p><strong>Төрөл:</strong> Дадлагын тест</p>
+            <p><strong>Оноо:</strong> {{ practice_result.score }}</p>
+            <p><strong>Тэнцэх босго:</strong> {{ practice_result.pass_score }}</p>
+            <p><strong>Үр дүн:</strong>
+                {% if practice_result.is_passed %}
+                <span class="badge text-bg-success">Тэнцсэн</span>
+                {% else %}
+                <span class="badge text-bg-danger">Тэнцээгүй</span>
+                {% endif %}
+            </p>
+            <p class="text-muted">Practice тестийн үр дүн тайланд хадгалагдахгүй.</p>
+        {% else %}
+            <p><strong>Шалгалт:</strong> {{ attempt.exam.title }}</p>
+            <p><strong>Төрөл:</strong> {{ attempt.exam.get_exam_type_display }}</p>
+            <p><strong>Оноо:</strong> {{ attempt.total_score }}</p>
+            <p><strong>Тэнцэх босго:</strong> {{ attempt.exam.pass_score }}</p>
+            <p><strong>Төлөв:</strong>
+                {% if attempt.is_passed %}
+                <span class="badge text-bg-success">Тэнцсэн</span>
+                {% else %}
+                <span class="badge text-bg-danger">Тэнцээгүй</span>
+                {% endif %}
+            </p>
+            <p><strong>Дууссан огноо:</strong> {{ attempt.completed_at|date:'Y-m-d H:i' }}</p>
+        {% endif %}
+        <a href="{% url 'exam_list' %}" class="btn btn-primary btn-lg">Шалгалтын жагсаалт</a>
+    </div>
+</div>
+{% endblock %}

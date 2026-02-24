@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Миний сургалт</h2>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Гарчиг</th>
+            <th>Эхлэх</th>
+            <th>Дуусах</th>
+            <th>Төлөв</th>
+            <th>Оноо</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for p in participations %}
+        <tr>
+            <td>{{ p.training.title }}</td>
+            <td>{{ p.training.start_date }}</td>
+            <td>{{ p.training.end_date }}</td>
+            <td>{{ p.get_status_display }}</td>
+            <td>{{ p.score|default:'-' }}</td>
+            <td><a href="{% url 'training_detail' p.training.id %}" class="btn btn-sm btn-outline-primary">Дэлгэрэнгүй</a></td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="6">Танд оноогдсон сургалт алга.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

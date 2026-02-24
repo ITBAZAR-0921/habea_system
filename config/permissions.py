@@ -10,6 +10,7 @@ ROLE_GROUPS = {
     'department_head': 'Хэлтсийн дарга',
     'employee': 'Ажилтан',
 }
+MANAGER_ROLES = ('system_admin', 'hse_manager', 'department_head')
 
 
 def ensure_role_groups():

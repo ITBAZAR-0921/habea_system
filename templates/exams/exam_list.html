@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Шалгалт & Жишиг тест</h2>
+    {% if is_manager %}
+    <a href="{% url 'exam_create' %}" class="btn btn-primary btn-lg">Шалгалт үүсгэх</a>
+    {% endif %}
+</div>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Гарчиг</th>
+            <th>Төрөл</th>
+            <th>Хамрах хүрээ</th>
+            <th>Хугацаа</th>
+            <th>Тэнцэх оноо</th>
+            <th>Идэвх</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for exam in exams %}
+        <tr>
+            <td>{{ exam.title }}</td>
+            <td>{{ exam.get_exam_type_display }}</td>
+            <td>{{ exam.get_target_type_display }}</td>
+            <td>{{ exam.duration_minutes }} мин</td>
+            <td>{{ exam.pass_score }}</td>
+            <td>{% if exam.is_active %}Тийм{% else %}Үгүй{% endif %}</td>
+            <td>
+                {% if is_manager %}
+                <div class="d-flex flex-wrap gap-1">
+                    <a href="{% url 'exam_questions_manage' exam.id %}" class="btn btn-sm btn-outline-primary">Асуулт засах</a>
+                    <a href="{% url 'exam_update' exam.id %}" class="btn btn-sm btn-outline-secondary">Засах</a>
+                    <a href="{% url 'exam_delete' exam.id %}" class="btn btn-sm btn-outline-danger">Устгах</a>
+                </div>
+                {% elif is_employee %}
+                <form method="post" action="{% url 'exam_start' exam.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-lg">Эхлэх</button>
+                </form>
+                {% else %}
+                <span class="text-muted">Өгөгдөх эрхгүй</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="7">Шалгалт бүртгэгдээгүй байна.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -7,7 +7,3 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = '__all__'
-
-
-class EmployeeExcelUploadForm(forms.Form):
-    file = forms.FileField(label='Excel файл (.xlsx)')

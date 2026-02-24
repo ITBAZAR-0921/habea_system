@@ -15,7 +15,7 @@
     <div class="col-md-4">
         <div class="card border-0 shadow-sm">
             <div class="card-body">
-                <h6 class="text-muted">Нийт заавар</h6>
+                <h6 class="text-muted">Нийт зааварчилгааны төрөл</h6>
                 <h3>{{ instruction_count }}</h3>
             </div>
         </div>
@@ -31,11 +31,27 @@
 </div>
 
 <div class="row g-3 mt-1">
-    <div class="col-md-6">
+    <div class="col-md-4">
+        <div class="alert alert-warning mb-0">30 хоногт дуусах: <strong>{{ due_soon_count }}</strong></div>
+    </div>
+    <div class="col-md-4">
         <div class="alert alert-danger mb-0">Хугацаа дууссан: <strong>{{ overdue_count }}</strong></div>
     </div>
-    <div class="col-md-6">
-        <div class="alert alert-warning mb-0">30 хоногт дуусах: <strong>{{ due_soon_count }}</strong></div>
+    <div class="col-md-4">
+        <div class="alert alert-secondary mb-0">Танилцаагүй: <strong>{{ unacknowledged_count }}</strong></div>
+    </div>
+</div>
+
+<h4 class="mt-4 mb-3">Мэдэгдлийн статистик</h4>
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="alert alert-info mb-0">Нийт мэдэгдэл: <strong>{{ total_notice_count }}</strong></div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-warning mb-0">Уншаагүй: <strong>{{ unread_notice_count }}</strong></div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-secondary mb-0">Баталгаажаагүй: <strong>{{ unacknowledged_notice_count }}</strong></div>
     </div>
 </div>
 {% endblock %}

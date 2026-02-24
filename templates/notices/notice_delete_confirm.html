@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Мэдэгдэл устгах</h2>
+<p>"{{ notice.title }}" мэдэгдлийг устгахдаа итгэлтэй байна уу?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Устгах</button>
+    <a href="{% url 'notice_list' %}" class="btn btn-secondary">Буцах</a>
+</form>
+{% endblock %}

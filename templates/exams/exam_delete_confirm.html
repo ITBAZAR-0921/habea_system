@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Шалгалт устгах</h2>
+<p>"{{ exam.title }}" шалгалтыг устгах/идэвхгүй болгох үйлдлийг баталгаажуулна уу.</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger btn-lg">Үйлдэл хийх</button>
+    <a href="{% url 'exam_list' %}" class="btn btn-secondary btn-lg">Буцах</a>
+</form>
+{% endblock %}

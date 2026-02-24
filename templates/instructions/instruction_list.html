@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="mb-3">Зааврын жагсаалт</h2>
+<h2 class="mb-3">Зааварчилгааны төрлүүд</h2>
 
 <div class="mb-3 d-flex gap-2">
-    <a href="{% url 'instruction_add' %}" class="btn btn-success">Заавар нэмэх</a>
-    <a href="{% url 'instruction_record_add' %}" class="btn btn-primary">Зааварчилгаа бүртгэл нэмэх</a>
-</div>
-
-<div class="row mb-3">
-    <div class="col-md-6"><div class="alert alert-warning mb-0">30 хоногт дуусах: <strong>{{ due_soon_count }}</strong></div></div>
-    <div class="col-md-6"><div class="alert alert-danger mb-0">Хугацаа дууссан: <strong>{{ overdue_count }}</strong></div></div>
+    <a href="{% url 'instruction_add' %}" class="btn btn-success">Зааварчилгаа нэмэх</a>
+    <a href="{% url 'instruction_record_add' %}" class="btn btn-primary">Зааварчилгаа өгөх</a>
 </div>
 
 <table class="table table-bordered bg-white">
     <thead>
         <tr>
             <th>Гарчиг</th>
+            <th>Төрөл</th>
             <th>Тайлбар</th>
             <th>Хүчинтэй хоног</th>
             <th>Файл</th>
@@ -26,6 +22,7 @@
     {% for ins in instructions %}
         <tr>
             <td>{{ ins.title }}</td>
+            <td>{{ ins.get_instruction_type_display }}</td>
             <td>{{ ins.description|truncatechars:120 }}</td>
             <td>{{ ins.validity_days }}</td>
             <td>
@@ -37,7 +34,7 @@
             </td>
         </tr>
     {% empty %}
-        <tr><td colspan="4">Заавар бүртгэгдээгүй байна.</td></tr>
+        <tr><td colspan="5">Зааварчилгаа бүртгэгдээгүй байна.</td></tr>
     {% endfor %}
     </tbody>
 </table>

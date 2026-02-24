@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{% if is_edit %}Шалгалт засах{% else %}Шалгалт үүсгэх{% endif %}</h2>
+<form method="post" class="mt-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary btn-lg">Хадгалах</button>
+    <a href="{% url 'exam_list' %}" class="btn btn-secondary btn-lg">Буцах</a>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Миний мэдэгдэл</h2>
+
+{% for item in notice_items %}
+<div class="card mb-3 {% if item.is_unread %}border-warning{% endif %}">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="card-title mb-0">{{ item.notice.title }}</h5>
+            <small class="text-muted">{{ item.notice.created_at|date:'Y-m-d H:i' }}</small>
+        </div>
+        <div class="mb-2">
+            {% if item.is_acknowledged %}
+                <span class="badge text-bg-success">Танилцсан</span>
+            {% else %}
+                <span class="badge text-bg-warning">Уншаагүй</span>
+            {% endif %}
+        </div>
+        <p class="card-text mb-2" style="white-space: pre-line;">{{ item.notice.content }}</p>
+
+        {% if item.notice.requires_acknowledgement and not item.is_acknowledged %}
+        <form method="post" action="{% url 'acknowledge_notice' item.notice.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-primary">Танилцсан</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-info">Танд харагдах мэдэгдэл байхгүй.</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Асуулт нэмэх: {{ exam.title }}</h2>
+<p class="text-muted">Нэг асуулт бүрт 4 choice оруулж, зөв хариултыг сонгоно уу.</p>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    {% for form in formset %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h6 class="mb-3">Асуулт #{{ forloop.counter }}</h6>
+            {{ form.id }}
+            {{ form.non_field_errors }}
+            <div class="row g-3">
+                <div class="col-12 col-lg-8">{{ form.text.label_tag }} {{ form.text }}</div>
+                <div class="col-6 col-lg-2">{{ form.score.label_tag }} {{ form.score }}</div>
+                <div class="col-6 col-lg-2">{{ form.order.label_tag }} {{ form.order }}</div>
+                <div class="col-12">{{ form.image.label_tag }} {{ form.image }}</div>
+                <div class="col-12 col-lg-6">{{ form.choice_1.label_tag }} {{ form.choice_1 }}</div>
+                <div class="col-12 col-lg-6">{{ form.choice_2.label_tag }} {{ form.choice_2 }}</div>
+                <div class="col-12 col-lg-6">{{ form.choice_3.label_tag }} {{ form.choice_3 }}</div>
+                <div class="col-12 col-lg-6">{{ form.choice_4.label_tag }} {{ form.choice_4 }}</div>
+                <div class="col-12 col-lg-4">{{ form.correct_choice.label_tag }} {{ form.correct_choice }}</div>
+                {% if form.instance.pk %}
+                <div class="col-12 col-lg-4 d-flex align-items-end">
+                    <div class="form-check">{{ form.DELETE }} <label class="form-check-label" for="{{ form.DELETE.id_for_label }}">Устгах</label></div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary btn-lg">Асуултууд хадгалах</button>
+    <a href="{% url 'exam_list' %}" class="btn btn-secondary btn-lg">Буцах</a>
+</form>
+{% endblock %}
