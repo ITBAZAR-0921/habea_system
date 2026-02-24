@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'employees',
+    
+    'employees.apps.EmployeesConfig',
     'instructions',
 ]
 
@@ -77,9 +78,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'hse_db',
-        'USER': 'hse_user',
-	'PASSWORD' : 'D@ta147',
+        'NAME': 'habea_db',
+        'USER': 'habea_user',
+	'PASSWORD' : 'H@bea_2026',
 	'HOST': 'localhost',
 	'PORT' : '5432',
     }
@@ -125,3 +126,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'

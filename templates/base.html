@@ -55,10 +55,16 @@
 <body>
 
 <!-- Top Navbar -->
-<nav class="navbar navbar-dark navbar-custom px-3">
+<nav class="navbar navbar-dark navbar-custom px-3 d-flex justify-content-between">
     <span class="navbar-brand mb-0 h5 text-white">
         ХАБЭА удирдлагын систем
     </span>
+   
+    <form action="{% url 'logout' %}" method="post" class="mb-0">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-light btn-sm">
+        Гарах</button>
+</form>
 </nav>
 
 <div class="container-fluid">

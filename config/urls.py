@@ -19,7 +19,8 @@ from django.urls import path, include
 from django.shortcuts import render
 from django.conf import settings
 from django.conf.urls.static import static
-from employees.views import employee_list, employee_add
+from employees.views import employee_list
+from django.contrib.auth import views as auth_views
 
 def dashboard(request):
     return render(request, "dashboard.html")
@@ -35,13 +36,19 @@ def settings_view(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', dashboard),
-    path('employees/', employee_list),
-    path('employees/add/', employee_add, name='employee_add'),
+
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+
+    path('', dashboard, name='dashboard'),
+
+    path('employees/', include('employees.urls')),
+    path('instructions/', include('instructions.urls')),
+
     path('reports/', reports),
     path('settings/', settings_view),
    
-    path('instructions/', include('instructions.urls')),
+    
 ]
 
 if settings.DEBUG:
