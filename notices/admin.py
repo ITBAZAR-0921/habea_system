@@ -5,8 +5,8 @@ from .models import Notice, NoticeRead
 
 @admin.register(Notice)
 class NoticeAdmin(admin.ModelAdmin):
-    list_display = ('title', 'notice_type', 'created_by', 'created_at', 'is_active')
-    list_filter = ('notice_type', 'is_active', 'created_at')
+    list_display = ('title', 'notice_type', 'created_by', 'created_at', 'expires_at', 'is_active')
+    list_filter = ('notice_type', 'is_active', 'created_at', 'expires_at')
     search_fields = ('title', 'content', 'created_by__username')
     filter_horizontal = ('departments', 'positions', 'employees')
 

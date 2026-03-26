@@ -23,6 +23,7 @@ class Notice(models.Model):
     requires_acknowledgement = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='created_notices')
     created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     class Meta:

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'notices.apps.NoticesConfig',
     'trainings.apps.TrainingsConfig',
     'exams.apps.ExamsConfig',
+    'reports.apps.ReportsConfig',
 ]
 
 MIDDLEWARE = [

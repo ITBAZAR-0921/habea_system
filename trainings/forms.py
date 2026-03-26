@@ -21,12 +21,24 @@ class TrainingForm(forms.ModelForm):
             'is_active',
         ]
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-            'departments': forms.SelectMultiple(attrs={'size': 8}),
-            'positions': forms.SelectMultiple(attrs={'size': 8}),
-            'employees': forms.SelectMultiple(attrs={'size': 8}),
-            'start_date': forms.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Сургалтын гарчиг'}),
+            'description': forms.Textarea(
+                attrs={
+                    'rows': 5,
+                    'class': 'form-control',
+                    'style': 'height: 120px; resize: vertical;',
+                    'placeholder': 'Сургалтын тайлбар',
+                }
+            ),
+            'training_type': forms.Select(attrs={'class': 'form-select'}),
+            'departments': forms.SelectMultiple(attrs={'class': 'form-select select2-multi'}),
+            'positions': forms.SelectMultiple(attrs={'class': 'form-select select2-multi'}),
+            'employees': forms.SelectMultiple(attrs={'class': 'form-select select2-multi'}),
+            'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'trainer_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Сургагчийн нэр'}),
+            'required': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
     def clean(self):
@@ -48,7 +60,16 @@ class TrainingMaterialForm(forms.ModelForm):
         model = TrainingMaterial
         fields = ['title', 'material_type', 'file', 'text_content']
         widgets = {
-            'text_content': forms.Textarea(attrs={'rows': 4}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Материалын нэр'}),
+            'material_type': forms.Select(attrs={'class': 'form-select material-type-field'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control material-file-field'}),
+            'text_content': forms.Textarea(
+                attrs={
+                    'rows': 8,
+                    'class': 'form-control material-text-field material-text-rich',
+                    'placeholder': 'Text агуулга оруулна уу',
+                }
+            ),
         }
 
     def clean(self):

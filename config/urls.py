@@ -52,27 +52,6 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-@role_required(MANAGER_ROLES)
-def reports(request):
-    today = timezone.localdate()
-    due_limit = today + timedelta(days=30)
-
-    records = InstructionRecord.objects.select_related('employee', 'instruction').all()
-    overdue_records = records.filter(next_due_date__lt=today)
-    due_soon_records = records.filter(next_due_date__gte=today, next_due_date__lte=due_limit)
-    unacknowledged_records = records.filter(acknowledged=False)
-
-    return render(
-        request,
-        'reports.html',
-        {
-            'overdue_records': overdue_records,
-            'due_soon_records': due_soon_records,
-            'unacknowledged_records': unacknowledged_records,
-        },
-    )
-
-
 @role_required(['system_admin'])
 def settings_view(request):
     ensure_role_groups()
@@ -116,7 +95,7 @@ urlpatterns = [
     path('notices/', include('notices.urls')),
     path('trainings/', include('trainings.urls')),
     path('exams/', include('exams.urls')),
-    path('reports/', reports, name='reports'),
+    path('reports/', include('reports.urls')),
     path('settings/', settings_view, name='settings'),
 ]
 

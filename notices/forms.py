@@ -14,6 +14,7 @@ class NoticeForm(forms.ModelForm):
             'positions',
             'employees',
             'requires_acknowledgement',
+            'expires_at',
             'is_active',
         ]
         widgets = {
@@ -21,6 +22,7 @@ class NoticeForm(forms.ModelForm):
             'departments': forms.SelectMultiple(attrs={'size': 8}),
             'positions': forms.SelectMultiple(attrs={'size': 8}),
             'employees': forms.SelectMultiple(attrs={'size': 8}),
+            'expires_at': forms.DateInput(attrs={'type': 'date'}),
         }
 
     def clean(self):

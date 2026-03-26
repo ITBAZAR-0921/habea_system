@@ -11,7 +11,13 @@ from .services import sync_training_participations
 
 
 def _manager_training_queryset():
-    return Training.objects.select_related('created_by').prefetch_related('materials', 'participations')
+    return Training.objects.select_related('created_by').prefetch_related(
+        'materials',
+        'participations',
+        'departments',
+        'positions',
+        'employees',
+    )
 
 
 @role_required(MANAGER_ROLES)

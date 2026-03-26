@@ -1,41 +1,88 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    .training-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        gap: 16px;
+    }
+    .training-card {
+        border: 1px solid #e5eaf0;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+        background: #fff;
+    }
+    .training-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 44px;
+    }
+    .meta-chip {
+        display: inline-block;
+        font-size: 12px;
+        border-radius: 999px;
+        padding: 4px 10px;
+        background: #eef4fb;
+        color: #334155;
+        margin-right: 6px;
+        margin-bottom: 6px;
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="mb-0">Сургалт</h2>
     <a href="{% url 'training_create' %}" class="btn btn-primary">Сургалт нэмэх</a>
 </div>
 
-<table class="table table-bordered bg-white">
-    <thead>
-        <tr>
-            <th>Гарчиг</th>
-            <th>Төрөл</th>
-            <th>Эхлэх</th>
-            <th>Дуусах</th>
-            <th>Сургагч</th>
-            <th>Идэвх</th>
-            <th>Үйлдэл</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="training-grid">
     {% for training in trainings %}
-        <tr>
-            <td>{{ training.title }}</td>
-            <td>{{ training.get_training_type_display }}</td>
-            <td>{{ training.start_date }}</td>
-            <td>{{ training.end_date }}</td>
-            <td>{{ training.trainer_name }}</td>
-            <td>{% if training.is_active %}Тийм{% else %}Үгүй{% endif %}</td>
-            <td>
-                <a href="{% url 'training_detail' training.id %}" class="btn btn-sm btn-outline-primary">Дэлгэрэнгүй</a>
-                <a href="{% url 'training_update' training.id %}" class="btn btn-sm btn-outline-secondary">Засах</a>
-                <a href="{% url 'training_delete' training.id %}" class="btn btn-sm btn-outline-danger">Устгах</a>
-            </td>
-        </tr>
+    <div class="training-card p-3 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5 class="mb-0">{{ training.title }}</h5>
+            {% if training.is_active %}
+                <span class="badge text-bg-success">Идэвхтэй</span>
+            {% else %}
+                <span class="badge text-bg-secondary">Идэвхгүй</span>
+            {% endif %}
+        </div>
+
+        <div class="text-muted small mb-2">{{ training.start_date }} - {{ training.end_date }}</div>
+
+        <div class="training-desc text-muted mb-3">{{ training.description|striptags|default:'Тайлбар оруулаагүй.' }}</div>
+
+        <div class="mb-2">
+            <span class="meta-chip">{{ training.get_training_type_display }}</span>
+            <span class="meta-chip">Материал: {{ training.materials.count }}</span>
+            {% if training.required %}
+                <span class="meta-chip">Required</span>
+            {% endif %}
+        </div>
+
+        <div class="small text-muted mb-3">
+            {% if training.training_type == 'department' %}
+                Тarget: Хэлтэс {{ training.departments.count }}
+            {% elif training.training_type == 'position' %}
+                Тarget: Албан тушаал {{ training.positions.count }}
+            {% elif training.training_type == 'specific_employee' %}
+                Тarget: Ажилтан {{ training.employees.count }}
+            {% else %}
+                Тarget: Бүх ажилтан
+            {% endif %}
+        </div>
+
+        <div class="mt-auto d-flex flex-wrap gap-2">
+            <a href="{% url 'training_detail' training.id %}" class="btn btn-sm btn-outline-primary">Дэлгэрэнгүй</a>
+            <a href="{% url 'training_update' training.id %}" class="btn btn-sm btn-outline-secondary">Засах</a>
+            <a href="{% url 'training_delete' training.id %}" class="btn btn-sm btn-outline-danger">Устгах</a>
+        </div>
+    </div>
     {% empty %}
-        <tr><td colspan="7">Сургалт бүртгэгдээгүй байна.</td></tr>
+    <div class="col-12">
+        <div class="alert alert-info mb-0">Сургалт бүртгэгдээгүй байна.</div>
+    </div>
     {% endfor %}
-    </tbody>
-</table>
+</div>
 {% endblock %}

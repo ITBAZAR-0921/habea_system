@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-3">Тайлан Dashboard</h2>
+
+<form method="get" class="row g-2 align-items-end mb-3">
+    <input type="hidden" name="tab" value="{{ active_tab }}" id="activeTabInput">
+    <div class="col-12 col-md-3">
+        <label class="form-label">Эхлэх огноо</label>
+        <input type="date" name="start_date" class="form-control" value="{{ filters.start_date }}">
+    </div>
+    <div class="col-12 col-md-3">
+        <label class="form-label">Дуусах огноо</label>
+        <input type="date" name="end_date" class="form-control" value="{{ filters.end_date }}">
+    </div>
+    <div class="col-12 col-md-2">
+        <label class="form-label">Хэлтэс</label>
+        <select class="form-select" name="department_id">
+            <option value="">Бүгд</option>
+            {% for dep in departments %}
+            <option value="{{ dep.id }}" {% if filters.department_id == dep.id|stringformat:'s' %}selected{% endif %}>{{ dep.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12 col-md-2">
+        <label class="form-label">Албан тушаал</label>
+        <select class="form-select" name="position_id">
+            <option value="">Бүгд</option>
+            {% for pos in positions %}
+            <option value="{{ pos.id }}" {% if filters.position_id == pos.id|stringformat:'s' %}selected{% endif %}>{{ pos.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12 col-md-2 d-grid">
+        <button class="btn btn-primary" type="submit">Шүүх</button>
+    </div>
+</form>
+
+<div class="d-flex gap-2 mb-3">
+    <a class="btn btn-outline-danger btn-sm export-link" data-format="pdf" href="{% url 'reports_export' %}?{{ export_querystring }}&format=pdf">PDF Export</a>
+    <a class="btn btn-outline-success btn-sm export-link" data-format="excel" href="{% url 'reports_export' %}?{{ export_querystring }}&format=excel">Excel Export</a>
+</div>
+
+<ul class="nav nav-tabs mb-3" id="reportTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link {% if active_tab == 'notices' %}active{% endif %}" id="notices-tab" data-bs-toggle="tab" data-bs-target="#notices-pane" type="button" role="tab" data-tab="notices">Мэдэгдэл</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link {% if active_tab == 'instructions' %}active{% endif %}" id="instructions-tab" data-bs-toggle="tab" data-bs-target="#instructions-pane" type="button" role="tab" data-tab="instructions">Зааварчилгаа</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link {% if active_tab == 'trainings' %}active{% endif %}" id="trainings-tab" data-bs-toggle="tab" data-bs-target="#trainings-pane" type="button" role="tab" data-tab="trainings">Сургалт</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link {% if active_tab == 'exams' %}active{% endif %}" id="exams-tab" data-bs-toggle="tab" data-bs-target="#exams-pane" type="button" role="tab" data-tab="exams">Шалгалт</button>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade {% if active_tab == 'notices' %}show active{% endif %}" id="notices-pane" role="tabpanel">
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Нийт мэдэгдэл</small><div class="fw-bold fs-4">{{ reports_data.notices.metrics.total_notices }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Танилцсан %</small><div class="fw-bold fs-4">{{ reports_data.notices.metrics.read_percent }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Танилцаагүй %</small><div class="fw-bold fs-4">{{ reports_data.notices.metrics.unread_percent }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Баталгаажаагүй %</small><div class="fw-bold fs-4">{{ reports_data.notices.metrics.unacknowledged_percent }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Хугацаа дууссан</small><div class="fw-bold fs-4">{{ reports_data.notices.metrics.expired_count }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>30 хоногт дуусах</small><div class="fw-bold fs-4">{{ reports_data.notices.metrics.due_soon_count }}</div></div></div></div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-12 col-lg-8">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm align-middle">
+                        <thead><tr><th>Мэдэгдлийн нэр</th><th>Нийт ажилтан</th><th>Танилцсан</th><th>Танилцаагүй</th></tr></thead>
+                        <tbody>
+                        {% for row in reports_data.notices.rows %}
+                            <tr class="table-primary" data-bs-toggle="collapse" data-bs-target="#notice-{{ row.id }}" aria-expanded="false" style="cursor:pointer;">
+                                <td>{{ row.title }}</td><td>{{ row.total_employees }}</td><td>{{ row.read_count }}</td><td>{{ row.unread_count }}</td>
+                            </tr>
+                            <tr class="collapse" id="notice-{{ row.id }}">
+                                <td colspan="4">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm mb-0">
+                                            <thead><tr><th>Ажилтан</th><th>Хэлтэс</th><th>Албан тушаал</th><th>Танилцсан</th><th>Баталгаажсан</th></tr></thead>
+                                            <tbody>
+                                            {% for emp in row.drilldown %}
+                                                <tr>
+                                                    <td>{{ emp.name }}</td>
+                                                    <td>{{ emp.department }}</td>
+                                                    <td>{{ emp.position }}</td>
+                                                    <td>{% if emp.is_read %}Тийм{% else %}Үгүй{% endif %}</td>
+                                                    <td>{% if emp.is_acknowledged %}Тийм{% else %}Үгүй{% endif %}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="4" class="text-center">Мэдээлэл байхгүй</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4"><canvas id="noticeChart" height="220"></canvas></div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade {% if active_tab == 'instructions' %}show active{% endif %}" id="instructions-pane" role="tabpanel">
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Нийт бүртгэл</small><div class="fw-bold fs-4">{{ reports_data.instructions.metrics.total_records }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Танилцсан</small><div class="fw-bold fs-4">{{ reports_data.instructions.metrics.acknowledged_count }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Танилцаагүй</small><div class="fw-bold fs-4">{{ reports_data.instructions.metrics.unacknowledged_count }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Хугацаа дууссан</small><div class="fw-bold fs-4">{{ reports_data.instructions.metrics.overdue_count }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>30 хоногт дуусах</small><div class="fw-bold fs-4">{{ reports_data.instructions.metrics.due_soon_count }}</div></div></div></div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle">
+                <thead><tr><th>Зааварчилгааны нэр</th><th>Нийт ажилтан</th><th>Танилцсан</th><th>Хугацаа дууссан</th><th>30 хоногт дуусах</th></tr></thead>
+                <tbody>
+                {% for row in reports_data.instructions.rows %}
+                    <tr><td>{{ row.title }}</td><td>{{ row.total_employees }}</td><td>{{ row.acknowledged }}</td><td>{{ row.overdue }}</td><td>{{ row.due_soon }}</td></tr>
+                {% empty %}
+                    <tr><td colspan="5" class="text-center">Мэдээлэл байхгүй</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-pane fade {% if active_tab == 'trainings' %}show active{% endif %}" id="trainings-pane" role="tabpanel">
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-lg-3"><div class="card h-100"><div class="card-body"><small>Нийт сургалт</small><div class="fw-bold fs-4">{{ reports_data.trainings.metrics.total_trainings }}</div></div></div></div>
+            <div class="col-6 col-lg-3"><div class="card h-100"><div class="card-body"><small>Дууссан</small><div class="fw-bold fs-4">{{ reports_data.trainings.metrics.completed_count }}</div></div></div></div>
+            <div class="col-6 col-lg-3"><div class="card h-100"><div class="card-body"><small>Дуусаагүй</small><div class="fw-bold fs-4">{{ reports_data.trainings.metrics.incomplete_count }}</div></div></div></div>
+            <div class="col-6 col-lg-3"><div class="card h-100"><div class="card-body"><small>Required боловч дуусаагүй</small><div class="fw-bold fs-4">{{ reports_data.trainings.metrics.required_incomplete_count }}</div></div></div></div>
+        </div>
+        <div class="row g-3">
+            <div class="col-12 col-lg-8">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped align-middle">
+                        <thead><tr><th>Сургалтын нэр</th><th>Нийт хамрагдах</th><th>Дууссан %</th><th>Дуусаагүй %</th></tr></thead>
+                        <tbody>
+                        {% for row in reports_data.trainings.rows %}
+                            <tr><td>{{ row.title }}</td><td>{{ row.total_target }}</td><td>{{ row.completed_percent }}</td><td>{{ row.incomplete_percent }}</td></tr>
+                        {% empty %}
+                            <tr><td colspan="4" class="text-center">Мэдээлэл байхгүй</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4"><canvas id="trainingChart" height="220"></canvas></div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade {% if active_tab == 'exams' %}show active{% endif %}" id="exams-pane" role="tabpanel">
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Нийт шалгалт</small><div class="fw-bold fs-4">{{ reports_data.exams.metrics.total_exams }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Нийт өгсөн</small><div class="fw-bold fs-4">{{ reports_data.exams.metrics.total_taken }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Тэнцсэн %</small><div class="fw-bold fs-4">{{ reports_data.exams.metrics.passed_percent }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Унасан %</small><div class="fw-bold fs-4">{{ reports_data.exams.metrics.failed_percent }}</div></div></div></div>
+            <div class="col-6 col-lg-2"><div class="card h-100"><div class="card-body"><small>Дундаж оноо</small><div class="fw-bold fs-4">{{ reports_data.exams.metrics.avg_score }}</div></div></div></div>
+        </div>
+        <div class="row g-3">
+            <div class="col-12 col-lg-8">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped align-middle">
+                        <thead><tr><th>Шалгалтын нэр</th><th>Хамрагдсан</th><th>Дундаж оноо</th><th>Тэнцсэн %</th><th>Унасан %</th></tr></thead>
+                        <tbody>
+                        {% for row in reports_data.exams.rows %}
+                            <tr><td>{{ row.title }}</td><td>{{ row.participated }}</td><td>{{ row.avg_score }}</td><td>{{ row.passed_percent }}</td><td>{{ row.failed_percent }}</td></tr>
+                        {% empty %}
+                            <tr><td colspan="5" class="text-center">Мэдээлэл байхгүй</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4"><canvas id="examChart" height="220"></canvas></div>
+        </div>
+    </div>
+</div>
+
+{{ reports_data.notices.chart|json_script:"noticeChartData" }}
+{{ reports_data.trainings.chart|json_script:"trainingChartData" }}
+{{ reports_data.exams.chart|json_script:"examChartData" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+    function renderPie(canvasId, scriptId, colors) {
+        const canvas = document.getElementById(canvasId);
+        const script = document.getElementById(scriptId);
+        if (!canvas || !script) return;
+        const data = JSON.parse(script.textContent);
+        new Chart(canvas, {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{ data: data.values, backgroundColor: colors }],
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    renderPie('noticeChart', 'noticeChartData', ['#198754', '#dc3545', '#ffc107']);
+    renderPie('trainingChart', 'trainingChartData', ['#198754', '#fd7e14', '#dc3545']);
+    renderPie('examChart', 'examChartData', ['#0d6efd', '#dc3545']);
+
+    document.querySelectorAll('#reportTabs button[data-tab]').forEach(function(btn) {
+        btn.addEventListener('shown.bs.tab', function(evt) {
+            const tab = evt.target.getAttribute('data-tab');
+            document.getElementById('activeTabInput').value = tab;
+            const params = new URLSearchParams(window.location.search);
+            params.set('tab', tab);
+            window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+            document.querySelectorAll('.export-link').forEach(function(link) {
+                const format = link.getAttribute('data-format');
+                const exportParams = new URLSearchParams(params.toString());
+                exportParams.set('format', format);
+                link.href = `{% url 'reports_export' %}?${exportParams.toString()}`;
+            });
+        });
+    });
+})();
+</script>
+{% endblock %}

@@ -1,32 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="mb-2">{{ training.title }}</h2>
-<p class="text-muted mb-2">{{ training.start_date }} - {{ training.end_date }} | Сургагч: {{ training.trainer_name }}</p>
-<p class="mb-4" style="white-space: pre-line; font-size: 16px; line-height: 1.6;">{{ training.description|default:'Тайлбар оруулаагүй.' }}</p>
+<style>
+    .training-header {
+        border: 1px solid #e6ebf2;
+        border-radius: 14px;
+        background: #fff;
+        padding: 18px;
+        margin-bottom: 14px;
+    }
+    .material-box {
+        border: 1px solid #dce4ef;
+        border-radius: 12px;
+        background: #f8fafc;
+    }
+    .material-thumb {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #d2dbe8;
+    }
+    .text-preview {
+        max-height: 140px;
+        overflow: auto;
+        white-space: pre-wrap;
+        border: 1px solid #dde5ef;
+        border-radius: 8px;
+        padding: 10px;
+        background: #fff;
+    }
+</style>
 
-<h5 class="mb-3">Материалууд</h5>
+<div class="training-header">
+    <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
+        <div>
+            <h2 class="mb-1">{{ training.title }}</h2>
+            <p class="text-muted mb-2">{{ training.start_date }} - {{ training.end_date }} | Сургагч: {{ training.trainer_name }}</p>
+        </div>
+        {% if training.is_active %}
+        <span class="badge text-bg-success">Идэвхтэй</span>
+        {% else %}
+        <span class="badge text-bg-secondary">Идэвхгүй</span>
+        {% endif %}
+    </div>
+    <div class="mt-2">{{ training.description|safe|default:'Тайлбар оруулаагүй.' }}</div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Материалууд</h5>
+    <span class="badge text-bg-light">Нийт: {{ training.materials.count }}</span>
+</div>
+
 <div class="row g-3 mb-4">
     {% for material in training.materials.all %}
     <div class="col-12 col-lg-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <strong>
-                        {% if material.material_type == 'image' %}🖼️{% elif material.material_type == 'pdf' %}📄{% elif material.material_type == 'text' %}📚{% else %}📎{% endif %}
-                        {{ material.title }}
-                    </strong>
-                    <span class="badge text-bg-light">{{ material.get_material_type_display }}</span>
-                </div>
-
-                {% if material.material_type == 'image' and material.file %}
-                    <img src="{{ material.file.url }}" alt="{{ material.title }}" class="img-fluid rounded border" />
-                {% elif material.material_type == 'pdf' and material.file %}
-                    <a href="{{ material.file.url }}" class="btn btn-outline-primary btn-lg" target="_blank">PDF татах</a>
-                {% elif material.material_type == 'text' %}
-                    <div style="white-space: pre-line; font-size: 16px; line-height: 1.6;">{{ material.text_content }}</div>
-                {% endif %}
+        <div class="material-box p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong>{{ material.title }}</strong>
+                <span class="badge text-bg-light">{{ material.get_material_type_display }}</span>
             </div>
+
+            {% if material.material_type == 'image' and material.file %}
+                <img src="{{ material.file.url }}" alt="{{ material.title }}" class="material-thumb" />
+            {% elif material.material_type == 'pdf' and material.file %}
+                <div class="d-flex align-items-center justify-content-between border rounded bg-white p-3">
+                    <span class="fw-semibold">PDF файл</span>
+                    <a href="{{ material.file.url }}" class="btn btn-outline-primary btn-sm" target="_blank">Download</a>
+                </div>
+            {% elif material.material_type == 'text' %}
+                <details>
+                    <summary class="text-primary" style="cursor:pointer;">Text content харах</summary>
+                    <div class="text-preview mt-2">{{ material.text_content }}</div>
+                </details>
+            {% endif %}
         </div>
     </div>
     {% empty %}
@@ -41,18 +88,20 @@
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h5 class="mb-0">Оролцогчид</h5>
-            <a href="{% url 'training_update' training.id %}" class="btn btn-primary btn-lg">Сургалт/материал засах</a>
+            <a href="{% url 'training_update' training.id %}" class="btn btn-primary">Сургалт/материал засах</a>
         </div>
-        <table class="table table-sm table-bordered mb-0">
-            <thead><tr><th>Ажилтан</th><th>Төлөв</th><th>Оноо</th></tr></thead>
-            <tbody>
-            {% for p in participations %}
-            <tr><td>{{ p.employee }}</td><td>{{ p.get_status_display }}</td><td>{{ p.score|default:'-' }}</td></tr>
-            {% empty %}
-            <tr><td colspan="3">Оролцогч алга.</td></tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered mb-0">
+                <thead><tr><th>Ажилтан</th><th>Төлөв</th><th>Оноо</th></tr></thead>
+                <tbody>
+                {% for p in participations %}
+                <tr><td>{{ p.employee }}</td><td>{{ p.get_status_display }}</td><td>{{ p.score|default:'-' }}</td></tr>
+                {% empty %}
+                <tr><td colspan="3">Оролцогч алга.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% else %}
@@ -64,7 +113,7 @@
         <form method="post" class="d-grid gap-2 d-md-flex align-items-end">
             {% csrf_token %}
             <div>{{ status_form.status.label_tag }} {{ status_form.status }}</div>
-            <button type="submit" name="update_status" value="1" class="btn btn-success btn-lg">Дууссан гэж баталгаажуулах</button>
+            <button type="submit" name="update_status" value="1" class="btn btn-success">Дууссан гэж баталгаажуулах</button>
         </form>
     </div>
 </div>

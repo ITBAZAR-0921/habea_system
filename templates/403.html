@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center py-5">
+    <h1 class="display-6 text-danger mb-3">403 - Хандах эрхгүй</h1>
+    <p class="mb-4">Таны эрх энэ хуудсыг харахад хүрэхгүй байна.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Нүүр хуудас руу буцах</a>
+</div>
+{% endblock %}
